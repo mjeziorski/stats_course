@@ -1,27 +1,75 @@
-# Problem 9.3.4 Hospital tests for anticoagulant
-# punto=c(1:25)
-# plot(punto ~ punto, pch=punto)
+# ######################################################
+# Logistic regression in R from R-Bloggers
+# Example from R-Bloggers, binomial logistic regression
+# using Kaggle Titanic dataset to make a model multinomial legistic regression
+# ############
 #
-Exa9.3 = read.csv(file="EXA_C09_S03_01.csv", header=TRUE)
-names(Exa9.3)
-plot(Exa9.3$Y ~ Exa9.3$X, pch = 20)
-Ybar=mean(Exa9.3$Y)
-Xbar=mean(Exa9.3$X)
-abline(h=Ybar, col = 2, lty = 2)
-abline(v=Xbar, col = 2, lty = 2)
-Lin9.3 = lm(Y ~ X, data=Exa9.3)
-summary(Lin9.3)
-abline(Lin9.3, col=2)
+# First in this public data frirst is fo read the set putting NA in the 
+# missing data this is NA to the " " empty entries
+# 
+training.data.raw <- read.csv('train.csv',header=T,na.strings=c(""))
+
+# to test for empty values
+sapply(training.data.raw,function(x) sum(is.na(x)))
+# to estimate the empty vaues
+sapply(training.data.raw, function(x) length(unique(x)))
 #
+# Amelia data has a missmap function fo mising data
+library(Amelia)
+missmap(training.data.raw, main = "Missing values vs observed")
 #
-Exa9.7=read.csv(file="EXA_C09_S07_01.csv", header=TRUE)
-names(Exa9.7)
-plot(Exa9.7$CV ~ Exa9.7$HEIGHT, pch = 20)
-abline(h=mean(Exa9.7$CV), col = 2, lty = 2)
-abline(v=mean(Exa9.7$HEIGHT), col = 2, lty = 2)
-Lin9.7 = lm(CV ~ HEIGHT, data = Exa9.7)
-abline(Lin9.7, col=2)
-summary(Lin9.7)
-#
-cor(Exa7.1$HEIGHT,Exa7.1$CV)
-cor.test(Exa9.7$HEIGHT, Exa9.7$CV, method="pearson", alternative = "two.sided")
+# In the Titanic data set we will live out the data 1, 4, 9 
+data <- subset(training.data.raw,select=c(2,3,5,6,7,8,10,12))
+
+# For the missing data points tin age we will use the average 
+# age to sustitute for the empty entry points
+data$Age[is.na(data$Age)] <- mean(data$Age,na.rm=T)
+
+# As far as categorical variables are concerned, using the read.table() 
+# or read.csv() by default will encode the categorical variables as factors 
+# A factor is how R deals categorical variables
+is.factor(data$Sex)
+is.factor(data$Embarked)
+
+# how R is going to deal with the categorical variables, we can use the 
+# contrasts() function. This function will show us how the variables have
+# been dummyfied by R and how to interpret them in a model
+contrasts(data$Sex)
+contrasts(data$Embarked)
+
+data <- data[!is.na(data$Embarked),]
+rownames(data) <- NUL
+
+# Model
+# training set will be used to fit our model which we will be testing over 
+# the testing set
+train <- data[1:800,]
+test <- data[801:889,]
+
+# To fit the model important to specify the parameter family=binomial in 
+# the glm() function
+model <- glm(Survived ~. ,family=binomial(link='logit'), data=train)
+summary(model)
+anova(model, test="Chisq")
+
+# To test the model
+library(pscl)
+pR2(model)
+
+fitted.results <- predict(model,newdata=subset(test,select=c(2,3,4,5,6,7,8)),type='response')
+
+fitted.results <- ifelse(fitted.results > 0.5,1,0)
+
+misClasificError <- mean(fitted.results != test$Survived)
+print(paste('Accuracy',1-misClasificError))
+
+# 
+library(ROCR)
+p <- predict(model, newdata=subset(test,select=c(2,3,4,5,6,7,8)), type="response")
+pr <- prediction(p, test$Survived)
+prf <- performance(pr, measure = "tpr", x.measure = "fpr")
+plot(prf)
+
+auc <- performance(pr, measure = "auc")
+auc <- auc@y.values[[1]]
+auc
