@@ -19,7 +19,7 @@ library(Amelia)
 missmap(training.data.raw, main = "Missing values vs observed")
 #
 # In the Titanic data set we will live out the data 1, 4, 9 
-data <- subset(training.data.raw,select=c(2,3,5,6,7,8,10,12))
+data <- subset(training.data.raw,select=c(1,2,4,5,6,7,9,11))
 
 # For the missing data points tin age we will use the average 
 # age to sustitute for the empty entry points
@@ -36,9 +36,9 @@ is.factor(data$Embarked)
 # been dummyfied by R and how to interpret them in a model
 contrasts(data$Sex)
 contrasts(data$Embarked)
-
+#
 data <- data[!is.na(data$Embarked),]
-rownames(data) <- NUL
+rownames(data) <- NULL
 
 # Model
 # training set will be used to fit our model which we will be testing over 
