@@ -4,13 +4,17 @@
 #
 library(tidyverse)
 wcgs <- read_csv("DataRegressBook/wcgs.csv")
-
+#
 wcgs
 # to see the variables and see some of the variable names
 summary(wcgs$sbp)
+summary(wcgs)
 # to estimate the (max - min)/#bins
 # #bins 1+3.3log(3144) ~ 13 so using #bins 15
 # binswith 8.8 -> 9
 ggplot(data = wcgs) + geom_histogram(mapping = aes(x = sbp), binwidth = 9.0)
 boxplot(wcgs$sbp)
 # other boxplot comments
+# ggplot(data = wcgs) + geom_bar(mapping = aes(x = sbp, fill = weight))
+#
+# ggplot(data = wcgs) + geom_bar(mapping = aes(x = sbp, fill = weight), position = "dodge")
