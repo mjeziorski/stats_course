@@ -1,5 +1,12 @@
+#
+# install.packages("tidyverse")
+# install.packages("funModeling")
+# install.packages("Hmisc")
+
 setwd("~/Dropbox/Fdo/ClaseStats/RegresionClass/RegresionR_code")
 library(tidyverse)
+# library(funModeling)  
+# library(Hmisc)
 mpg
 #
 #
