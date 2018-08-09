@@ -20,7 +20,10 @@ summary(wcgs$sbp)
 # #bins 1+3.3log(3144) ~ 13 so using #bins 15
 # binswith 8.8 -> 9
 ggplot(data = wcgs) + geom_histogram(mapping = aes(x = sbp), binwidth = 9.0)
+# to generate fig 2.3 or the systolic blood pressure
 boxplot(wcgs$sbp)
+ggplot(data = wcgs, aes(y = sbp)) + geom_boxplot()
+# ggplot(data = wcgs, aes(y = sbp)) + geom_boxplot() + geom_jitter()
 # other boxplot comments
 # ggplot(data = wcgs) + geom_bar(mapping = aes(x = sbp, fill = weight))
 #
@@ -31,3 +34,9 @@ ggplot(data = wcgs) + geom_qq(aes(sample = sbp))
 ggplot(data = wcgs) + geom_point(mapping = aes(x = weight, y = sbp))
 # to add a smoothed representative plot figure 2.9 
 ggplot(data = wcgs) + geom_point(mapping = aes(x = weight, y = sbp)) + geom_smooth(mapping = aes(x = weight, y = sbp))
+# To combine a categorical variable
+# now to generate Figura 2.10 for systolic blood pressure by behavior pattern.
+ggplot(data = wcgs) + geom_boxplot(mapping = aes(x = behpat, y = sbp))
+ggplot(data = wcgs, aes(x = behpat, y = sbp)) + geom_boxplot()
+# ggplot(data = wcgs, aes(x = behpat, y = sbp)) + geom_boxplot() + geom_jitter()
+ggplot(data = wcgs, aes(x = behpat, y = sbp)) + geom_boxplot() + geom_jitter(height = .05, width = .05)
