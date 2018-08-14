@@ -42,7 +42,9 @@ ggplot(data = wcgs, aes(x = behpat, y = sbp)) + geom_boxplot()
 ggplot(data = wcgs, aes(x = behpat, y = sbp)) + geom_boxplot() + geom_jitter(height = .05, width = .05)
 
 # Multivariable descriptions
-
+# There is an R plot function for scatterplot matrix of correlation calcualtion (pairs(...)). To obtain the figure 2.11 of 
+# the SBP, age weight and height
 pairs(~sbp+age+weight+height, data=wcgs)
+pairs(~sbp+age+weight+height, data=wcgs, main="SBP, age, weight and height scatterplot matrix")
 # to plot the fig 2.12. Scatter plot of SBP vs Weight by Behavior Pattern
 ggplot(data = wcgs) + geom_point(mapping = aes(x = weight, y = sbp)) + facet_wrap(~ behpat, nrow = 2)
