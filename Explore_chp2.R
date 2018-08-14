@@ -46,5 +46,6 @@ ggplot(data = wcgs, aes(x = behpat, y = sbp)) + geom_boxplot() + geom_jitter(hei
 # the SBP, age weight and height
 pairs(~sbp+age+weight+height, data=wcgs)
 pairs(~sbp+age+weight+height, data=wcgs, main="SBP, age, weight and height scatterplot matrix")
+pairs(~sbp+age+weight+height, data=wcgs, lower.panel=panel.smooth, main="WCGS Scatterplot Matrix")
 # to plot the fig 2.12. Scatter plot of SBP vs Weight by Behavior Pattern
 ggplot(data = wcgs) + geom_point(mapping = aes(x = weight, y = sbp)) + facet_wrap(~ behpat, nrow = 2)
