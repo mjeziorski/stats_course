@@ -42,5 +42,5 @@ ggplot(data = hers, mapping = aes(x = diabetes, y = glucose)) + geom_boxplot()+ 
 #
 # Exercise 7.44 Ex744 "DXA","ST","BR","SEX"
 Ex744 <- read_csv("DataOther/REV_C07_44.csv")
-boxplot(DXA[Ex744$SEX == 1] ~ DXA[Ex744$SEX == 0], data=Ex744)
+boxplot(DXA ~ SEX, data=Ex744)
 ggplot(data = Ex744, mapping = aes(y=DXA, x=SEX)) + geom_boxplot()
