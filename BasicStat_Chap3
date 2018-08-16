@@ -33,14 +33,15 @@ t.test(Ex742$Base, Ex742$Follow, alternative="g", mu=0, paired=TRUE, var.equal=T
 #
 hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
 boxplot(glucose ~ diabetes, data=hers)
-boxplot(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=hers)
-t.test(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=hers, alternative="two.sided, mu=0, paired=FALSE, var.equal=TRUE)
+boxplot(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], alternative="two.sided", data=hers)
+t.test(glucose[hers$diabetes == "yes"] ~ exercise[hers$diabetes == "yes"], data=hers, alternative="two.sided", mu=0, paired=FALSE, var.equal=TRUE)
 #
 ggplot(data = hers, mapping = aes(y=glucose, x=diabetes)) + geom_boxplot() 
-ggplot(data = hers, mapping = aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ exercise)
-ggplot(data = hers, mapping = aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ insulin)
+ggplot(data = hers, mapping = aes(x = exercise, y = glucose)) + geom_boxplot() + facet_grid( . ~ diabetes)
+ggplot(data = hers, mapping = aes(x = insulin, y = glucose)) + geom_boxplot() + facet_grid( . ~ diabetes)
 #
 # Exercise 7.44 Ex744 "DXA","ST","BR","SEX"
 Ex744 <- read_csv("DataOther/REV_C07_44.csv")
 boxplot(DXA ~ SEX, data=Ex744)
 ggplot(data = Ex744, mapping = aes(y=DXA, group=SEX)) + geom_boxplot()
+t.test(DXA ~ SEX, data=Ex744, alternative="two.sided", mu=0, paired=FALSE, var.equal=TRUE)
