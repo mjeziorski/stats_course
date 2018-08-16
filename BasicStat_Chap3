@@ -1,0 +1,22 @@
+# Basic Statistical Methods
+# t-Test and ANOVA
+# t-Test determine if the averages of two variables are different
+# One-way ANOVA of the averages of n-variables, at least two are different
+#
+# From Daniel Chapter 7 exercise 3.3
+#
+library(tidyverse)
+
+Ex733 = read.csv(file="EXR_C07_S03_03.csv", header=TRUE)
+NoOSAS = Ex733$Length[Ex733$Group == 1]
+OSAS = Ex733$Length[Ex733$Group == 2]
+boxplot(NoOSAS,OSAS)
+
+#
+var.test(OSAS, NoOSAS)
+t.test(NoOSAS, OSAS, alternative="less", conf.level=0.99)
+#
+boxplot(Length ~ Group, data=Ex733)
+t.test(Length ~ Group, data=Ex733, alternative="less", conf.level=0.99)
+#
+ggplot(data = Ex733, aes(y = Length, group = Group)) + geom_boxplot()
