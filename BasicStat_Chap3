@@ -15,11 +15,10 @@ OSAS = Ex733$Length[Ex733$Group == 2]
 boxplot(NoOSAS,OSAS)
 #
 var.test(Ex733$Length[Ex733$Group == 2], Ex733$Length[Ex733$Group == 1])
-t.test(NoOSAS, OSAS, alternative="less", mu=0, var.equal = TRUE, conf.level=0.99)
 t.test(NoOSAS, OSAS, alternative="less", mu=0, var.equal = FALSE, conf.level=0.99)
 #
 boxplot(Length ~ Group, data=Ex733)
-t.test(Length ~ Group, data=Ex733, alternative="less", var.equal = TRUE, conf.level=0.99)
+t.test(Length ~ Group, data=Ex733, alternative="two.sided", var.equal = FALSE, conf.level=0.99)
 #
 ggplot(data = Ex733, aes(y = Length, group = Group)) + geom_boxplot()
 
