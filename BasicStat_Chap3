@@ -8,12 +8,13 @@
 library(tidyverse)
 
 Ex733 = read.csv(file="DataOther/EXR_C07_S03_03.csv", header=TRUE)
+
+var.test(Ex733$Length[Ex733$Group == 2], Ex733$Length[Ex733$Group == 1])
 NoOSAS = Ex733$Length[Ex733$Group == 1]
 OSAS = Ex733$Length[Ex733$Group == 2]
 boxplot(NoOSAS,OSAS)
-
 #
-var.test(OSAS, NoOSAS)
+var.test(Ex733$Length[Ex733$Group == 2], Ex733$Length[Ex733$Group == 1])
 t.test(NoOSAS, OSAS, alternative="less", mu=0, var.equal = TRUE, conf.level=0.99)
 t.test(NoOSAS, OSAS, alternative="less", mu=0, var.equal = FALSE, conf.level=0.99)
 #
