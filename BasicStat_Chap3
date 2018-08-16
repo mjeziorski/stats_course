@@ -7,20 +7,29 @@
 #
 library(tidyverse)
 
-Ex733 = read.csv(file="EXR_C07_S03_03.csv", header=TRUE)
+Ex733 = read.csv(file="DataOther/EXR_C07_S03_03.csv", header=TRUE)
 NoOSAS = Ex733$Length[Ex733$Group == 1]
 OSAS = Ex733$Length[Ex733$Group == 2]
 boxplot(NoOSAS,OSAS)
 
 #
 var.test(OSAS, NoOSAS)
-t.test(NoOSAS, OSAS, alternative="less", mu=0, conf.level=0.99)
+t.test(NoOSAS, OSAS, alternative="less", mu=0, var.equal = TRUE, conf.level=0.99)
+t.test(NoOSAS, OSAS, alternative="less", mu=0, var.equal = FALSE, conf.level=0.99)
 #
 boxplot(Length ~ Group, data=Ex733)
-t.test(Length ~ Group, data=Ex733, alternative="less", conf.level=0.99)
+t.test(Length ~ Group, data=Ex733, alternative="less", var.equal = TRUE, conf.level=0.99)
 #
 ggplot(data = Ex733, aes(y = Length, group = Group)) + geom_boxplot()
 
+# Prob 7.4.2
+#
+Ex742 <- read.csv(file="DataOther/EXR_C07_S04_02.csv", header=TRUE)
+#
+boxplot(Ex742)
+# varianzas son iguales 
+t.test(Ex742$Base, Ex742$Follow, alternative="g", mu=0, paired=TRUE, var.equal=TRUE)
+# ggplot(data = Ex742, mapping = aes(y=Follow, x=Base)) + geom_boxplot() 
 #
 hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
 boxplot(glucose ~ diabetes, data=hers)
@@ -30,3 +39,8 @@ t.test(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=he
 ggplot(data = hers, mapping = aes(y=glucose, x=diabetes)) + geom_boxplot() 
 ggplot(data = hers, mapping = aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ exercise)
 ggplot(data = hers, mapping = aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ insulin)
+#
+# Exercise 7.44 Ex744 "DXA","ST","BR","SEX"
+Ex744 <- read_csv("DataOther/REV_C07_44.csv")
+boxplot(DXA[Ex744$SEX == 1] ~ DXA[Ex744$SEX == 0], data=Ex744)
+ggplot(data = Ex744, mapping = aes(y=DXA, x=SEX)) + geom_boxplot()
