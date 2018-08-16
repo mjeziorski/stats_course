@@ -14,7 +14,7 @@ boxplot(NoOSAS,OSAS)
 
 #
 var.test(OSAS, NoOSAS)
-t.test(NoOSAS, OSAS, alternative="less", conf.level=0.99)
+t.test(NoOSAS, OSAS, alternative="less", mu=0, conf.level=0.99)
 #
 boxplot(Length ~ Group, data=Ex733)
 t.test(Length ~ Group, data=Ex733, alternative="less", conf.level=0.99)
@@ -25,7 +25,7 @@ ggplot(data = Ex733, aes(y = Length, group = Group)) + geom_boxplot()
 hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
 boxplot(glucose ~ diabetes, data=hers)
 boxplot(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=hers)
-t.test(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=hers, var.equal=TRUE)
+t.test(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=hers, alternative="two.sided, mu=0, paired=FALSE, var.equal=TRUE)
 #
 ggplot(data = hers, aes(y=glucose, x=diabetes) + geom_boxplot()
 ggplot(data = hers, aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ exercise)
