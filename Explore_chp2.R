@@ -3,7 +3,7 @@
 # we use tidyverse library to work.
 #
 library(tidyverse)
-wcgs <- read_csv("DataRegressBook/wcgs.csv")
+wcgs <- read_csv("DataRegressBook/Chap2/wcgs.csv")
 #
 wcgs
 glimpse(wcgs)
