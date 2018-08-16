@@ -28,3 +28,5 @@ boxplot(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=h
 t.test(glucose[hers$diabetes == "no"] ~ exercise[hers$diabetes == "no"], data=hers, var.equal=TRUE)
 #
 ggplot(data = hers, aes(y=glucose, x=diabetes) + geom_boxplot()
+ggplot(data = hers, aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ exercise)
+ggplot(data = hers, aes(x = diabetes, y = glucose)) + geom_boxplot()+ facet_grid( . ~ insulin)
