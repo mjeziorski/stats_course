@@ -45,3 +45,14 @@ Ex744 <- read_csv("DataOther/REV_C07_44.csv")
 boxplot(DXA ~ SEX, data=Ex744)
 ggplot(data = Ex744, mapping = aes(y=DXA, group=SEX)) + geom_boxplot()
 t.test(DXA ~ SEX, data=Ex744, alternative="two.sided", mu=0, paired=FALSE, var.equal=TRUE)
+
+# Grouping the data ready for ANOVA
+Ex744 <- read_csv("DataOther/REV_C07_44_mod.csv")
+ggplot(data = Ex744, mapping = aes(y=BodyFat, x=Method)) + geom_boxplot(na.rm = TRUE)
+# To use Sex as color, color must be >0
+Ex744$Sex <- Ex744$Sex + 1
+ggplot(data = Ex744, mapping = aes(y=BodyFat, x=Method, color = factor(Sex))) + geom_boxplot(na.rm = TRUE)
+ggplot(data = Ex744, mapping = aes(y = BodyFat, x = Method)) + geom_boxplot(na.rm = TRUE) 
+    + geom_jitter(height=0.2, width=0.2)
+ggplot(data = Ex744, mapping = aes(y = BodyFat, x = Method)) + geom_boxplot(na.rm = TRUE) 
+    + geom_jitter(height=0.05, width=0.05, color=factor(Ex744$Sex), na.rm = TRUE)
