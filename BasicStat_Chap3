@@ -56,3 +56,46 @@ ggplot(data = Ex744, mapping = aes(y = BodyFat, x = Method)) + geom_boxplot(na.r
     + geom_jitter(height=0.2, width=0.2)
 ggplot(data = Ex744, mapping = aes(y = BodyFat, x = Method)) + geom_boxplot(na.rm = TRUE) 
     + geom_jitter(height=0.05, width=0.05, color=factor(Ex744$Sex), na.rm = TRUE)
+# for a one-way ANOVA example with Ex744
+is.factor(Ex744$Method)
+aov744 <- aov(BodyFat~Method, data = Ex744)
+summary(aov744)
+TukeyHSD(aov744, conf.level = 0.99)
+plot(TukeyHSD(aov744, conf.level = 0.99), color = "red")
+#
+# Diagnostic check
+par(mfrow=c(2,2))
+plot(aov744)
+#
+# Shapiro Wilk test
+uhat <- resid(aov744)
+shapiro.test(uhat)
+
+bartlett.test(BodyFat~Method, data = Ex744)
+library(car)
+levene.test(BodyFat~Method, data = Ex744)
+
+# Other example Chap 8 One-Way ANOVA
+Ex82 <- read_csv("DataOther/EXA_C08_S02_01.csv")
+boxplot(Exa8_2)
+Ex82.dat = stack(Ex82)
+names(Exa8_2.dat)
+ggplot(data = Ex82.dat, mapping = aes(y=values, x=ind, color = factor(Sex))) + geom_boxplot(na.rm = TRUE)
+# Estimating the one-way ANOVA
+Ex82.aov=aov(values~ind, data=Ex82.dat)
+summary(Ex82.aov)
+## Testing
+par(mfrow=c(2,2))
+# layout(matrix(c(1, 2, 3, 4), nrow=2, ncol=2, byrow=TRUE))
+plot(Ex82.aov)
+TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE)
+plot(TukeyHSD(Ex82.aov), las=2)
+abline(v=0, col=2)
+#
+# Shapiro Wilk test
+uhat_82 <- resid(Ex82.aov)
+shapiro.test(uhat_82)
+
+bartlett.test(values~ind, data=Ex82.dat)
+library(car)
+levene.test(values~ind, data=Ex82.dat)
