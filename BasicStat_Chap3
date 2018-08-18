@@ -51,7 +51,7 @@ Ex744 <- read_csv("DataOther/REV_C07_44_mod.csv")
 ggplot(data = Ex744, mapping = aes(y=BodyFat, x=Method)) + geom_boxplot(na.rm = TRUE)
 # To use Sex as color, color must be >0
 Ex744$Sex <- Ex744$Sex + 1
-ggplot(data = Ex744, mapping = aes(y=BodyFat, x=Method, color = factor(Sex))) + geom_boxplot(na.rm = TRUE)
+ggplot(data = Ex744, mapping = aes(y=BodyFat, x=Method, color = Sex)) + geom_boxplot(na.rm = TRUE)
 ggplot(data = Ex744, mapping = aes(y = BodyFat, x = Method)) + geom_boxplot(na.rm = TRUE) 
     + geom_jitter(height=0.2, width=0.2)
 ggplot(data = Ex744, mapping = aes(y = BodyFat, x = Method)) + geom_boxplot(na.rm = TRUE) 
@@ -79,8 +79,12 @@ levene.test(BodyFat~Method, data = Ex744)
 Ex82 <- read_csv("DataOther/EXA_C08_S02_01.csv")
 boxplot(Ex82)
 Ex82.dat = stack(Ex82)
-names(Exa8_2.dat)
-ggplot(data = Ex82.dat, mapping = aes(y=values, x=ind, color = factor(Sex))) + geom_boxplot(na.rm = TRUE)
+names(Ex82.dat)
+# ggplot(data = Ex82.dat, mapping = aes(y=values, x=ind, color = ind)) + geom_boxplot(na.rm = TRUE) 
+    + geom_jitter(height=0.1, width=0.1)
+ggplot(data = Ex82.dat, mapping = aes(x = reorder(ind, values, FUN = median), y  =values, color = ind)) 
+    + geom_boxplot(na.rm = TRUE) + geom_jitter(height=0.1, width=0.1)
+    
 # Estimating the one-way ANOVA
 Ex82.aov=aov(values~ind, data=Ex82.dat)
 summary(Ex82.aov)
@@ -89,7 +93,8 @@ par(mfrow=c(2,2))
 # layout(matrix(c(1, 2, 3, 4), nrow=2, ncol=2, byrow=TRUE))
 plot(Ex82.aov)
 TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE)
-plot(TukeyHSD(Ex82.aov), las=2)
+par(mfrow=c(1,1))
+plot(TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE), color = "red")
 abline(v=0, col=2)
 #
 # Shapiro Wilk test
