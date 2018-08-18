@@ -77,7 +77,7 @@ levene.test(BodyFat~Method, data = Ex744)
 
 # Other example Chap 8 One-Way ANOVA
 Ex82 <- read_csv("DataOther/EXA_C08_S02_01.csv")
-boxplot(Exa8_2)
+boxplot(Ex82)
 Ex82.dat = stack(Ex82)
 names(Exa8_2.dat)
 ggplot(data = Ex82.dat, mapping = aes(y=values, x=ind, color = factor(Sex))) + geom_boxplot(na.rm = TRUE)
