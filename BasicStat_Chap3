@@ -61,7 +61,7 @@ is.factor(Ex744$Method)
 aov744 <- aov(BodyFat~Method, data = Ex744)
 summary(aov744)
 TukeyHSD(aov744, conf.level = 0.99)
-plot(TukeyHSD(aov744, conf.level = 0.99), color = "red")
+plot(TukeyHSD(aov744, conf.level = 0.99), las=1, col = "red")
 #
 # Diagnostic check
 par(mfrow=c(2,2))
