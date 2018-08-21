@@ -88,14 +88,13 @@ ggplot(data = Ex82.dat, mapping = aes(x = reorder(ind, values, FUN = median), y 
 # Estimating the one-way ANOVA
 Ex82.aov=aov(values~ind, data=Ex82.dat)
 summary(Ex82.aov)
+TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE)
+plot(TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE), color = "red")
+abline(v=0, col=2)
 ## Testing
 par(mfrow=c(2,2))
 # layout(matrix(c(1, 2, 3, 4), nrow=2, ncol=2, byrow=TRUE))
 plot(Ex82.aov)
-TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE)
-par(mfrow=c(1,1))
-plot(TukeyHSD(Ex82.aov, conf.level = 0.99, ordered=TRUE), color = "red")
-abline(v=0, col=2)
 #
 # Shapiro Wilk test
 uhat_82 <- resid(Ex82.aov)
@@ -104,3 +103,16 @@ shapiro.test(uhat_82)
 bartlett.test(values~ind, data=Ex82.dat)
 library(car)
 levene.test(values~ind, data=Ex82.dat)
+
+#
+hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
+ggplot(data = hers, mapping = aes(x = reorder(raceth, SBP, FUN = median), y=SBP, color = raceth)) + geom_boxplot(na.rm = TRUE) + geom_jitter(height=0.15, width=0.15)
+SBP_race.aov=aov(SBP~raceth, data=hers)
+summary(SBP_race.aov)
+TukeyHSD(SBP_race.aov, conf.level = 0.99, ordered=TRUE)
+plot(TukeyHSD(aov(SBP~raceth, data=hers), conf.level = 0.99, ordered=TRUE), col = "red")
+par(mfrow=c(2,2))
+plot(SBP_race.aov)
+par(mfrow=c(1,1))
+uhat_SBP <- resid(SBP_race.aov)
+shapiro.test(uhat_SBP)
