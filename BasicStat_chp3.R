@@ -19,3 +19,14 @@ shapiro.test(uhat_SBP)
 # Simple Linear Regression Model
 # SBP by age in the HERS data Y variation with a single predictor
 #
+
+# Contingency tables
+# frequency variables
+tab_wcgs <- table(wcgs$chd69, wcgs$arcus, dnn = c('CHD','arcus'))
+ftab_wcgs <- ftable(chd69~arcus~chd69, data= wcgs, dnn = c('CHD','arcus'))
+
+library(gmodels)
+CrossTable(wcgs$chd69, wcgs$arcus, dnn = c('CHD','arcus'))
+
+chisq.test(tab_wcgs)
+# chisq.test(tab_wcgs, simulate.p.value = TRUE)
