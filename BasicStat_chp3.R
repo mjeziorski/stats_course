@@ -68,7 +68,33 @@ par(mfrow=c(1,1))
 ggplot(data = Exr3.7, mapping = aes(x = DTPA, y = INVCYS)) + geom_point(na.rm = TRUE) + 
   geom_abline(aes(intercept = 0.1929, slope = 0.0063, colour = "red")) + 
   geom_jitter(height=0.05, width=0.05)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Correlation example
+# Problem 9.41 Lateral spine radiographs were studied from # women (34 to 87 years) fo bone density, data; 
+# anteroposterior (A) and lateral (L) bone mineral density 
+# BMD (g/cm^2)
+library(tidyverse)
+Rv9.41 <- read_csv(file="DataOther/REV_C09_41.csv")
 #
+ggplot(data=Rv9.41, mapping = aes(x=ABMD, y=LBMD)) + 
+  geom_point(na.rm = TRUE) + 
+  geom_vline(aes(xintercept = mean(ABMD), color = "red")) + 
+  geom_hline(aes(yintercept = mean(LBMD), color = "red"))
+# plain vanilla R commands
+# plot(LBMD ~ ABMD, data=Rv9.41)
+# abline(h=mean(Rv9.41$LBMD), col=2, lty=2)
+# abline(v=mean(Rv9.41$ABMD), col=2, lty=2)
+
+cor.test(Rv9.41$ABMD, Rv9.41$LBMD, method="pearson", alternative="two.sided")
+LinRv9.41 <- lm(LBMD ~ ABMD, data=Rv9.41)
+summary(LinRv9.41)
+#
+# A ggplot including the model and everithing
+ggplot(data=Rv9.41, mapping = aes(x=ABMD, y=LBMD)) + 
+  geom_point(na.rm = TRUE) +
+  geom_abline(aes(intercept = LinRv9.41$coefficients[1], slope = LinRv9.41$coefficients[2])) +
+  geom_vline(aes(xintercept = mean(ABMD), color = "blue")) + 
+  geom_hline(aes(yintercept = mean(LBMD), color = "blue"))
 
 # #############################################################################
 # Contingency tables
