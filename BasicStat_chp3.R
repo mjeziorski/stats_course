@@ -95,15 +95,3 @@ ggplot(data=Rv9.41, mapping = aes(x=ABMD, y=LBMD)) +
   geom_abline(aes(intercept = LinRv9.41$coefficients[1], slope = LinRv9.41$coefficients[2])) +
   geom_vline(aes(xintercept = mean(ABMD), color = "blue")) + 
   geom_hline(aes(yintercept = mean(LBMD), color = "blue"))
-
-# #############################################################################
-# Contingency tables
-# frequency variables
-tab_wcgs <- table(wcgs$chd69, wcgs$arcus, dnn = c('CHD','arcus'))
-ftab_wcgs <- ftable(chd69~arcus~chd69, data= wcgs, dnn = c('CHD','arcus'))
-#
-library(gmodels)
-CrossTable(wcgs$chd69, wcgs$arcus, dnn = c('CHD','arcus'))
-#
-chisq.test(tab_wcgs)
-# chisq.test(tab_wcgs, simulate.p.value = TRUE)
