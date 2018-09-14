@@ -4,16 +4,17 @@
 # Two-bytwo contngency table for CHD and corneal arcus
 # in the WCGS data set for CHD
 library(tidyverse)
+library(gmodels)
+#
 wcgs <- read_csv(file="DataRegressBook/Chap2/wcgs.csv")
 tab_arcus <- table(wcgs$chd69, wcgs$arcus, dnn = c('CHD','arcus'))
 ftab_arcus <- ftable(chd69~arcus~chd69, data= wcgs, dnn = c('CHD','arcus'))
-#
-library(gmodels)
 CrossTable(wcgs$chd69, wcgs$arcus, dnn = c('CHD','arcus'))
-#
 chisq.test(tab_arcus)
 # chisq.test(tab_wcgs, simulate.p.value = TRUE)
 
+# Multiple categories
+#
 # for the example in 3.7
 tab_agec <- ftable(agec~chd69, data=wcgs, dnn = c('CHD', 'agec'))
 chisq.test(tab_agec)
