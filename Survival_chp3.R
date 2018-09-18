@@ -1,9 +1,9 @@
 #
 # Survival analysis with the ALL data
 #
-library("survival")
-library("tidyverce")
-library("coin")
+library(tidyverse)
+library(survival)
+library(coin)
 #
 data("glioma", packaage = "coin")
 leuk <- read_csv(file="DataRegressBook/Chap3/leuk.csv")
