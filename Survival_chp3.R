@@ -5,7 +5,7 @@ library(tidyverse)
 library(survival)
 library(coin)
 #
-data("glioma", packaage = "coin")
+data("glioma", package = "coin")
 leuk <- read_csv(file="DataRegressBook/Chap3/leuk.csv")
 
 plot(survfit(Surv(time, cens) ~ group, data=leuk), main = "Acute Lymphoblastic Leukemia", lty = c(2,1), ylab = "Probability", xlab = "Remission time weeks", legend.text = c("Control", "6-MP"), legend.bty = "n")
