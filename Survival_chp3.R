@@ -19,7 +19,7 @@ g4 <- subset(glioma, histology == "GBM")
 plot(survfit(Surv(time, event) ~ group, data = g3), main = "Grade III Glioma", lty = c(2,1), ylab = "Probability", xlab = "Survival Months")
 plot(survfit(Surv(time, event) ~ group, data = g4), main = "Grade IV Glioma", lty = c(2,1), ylab = "Probability", xlab = "Survival Months")
 #
-surv_test(Surv(time, event) ~ group, data = g3, distribution = "exact")
-surv_test(Surv(time, event) ~ group, data = g4, distribution = "exact")
+logrank_test(Surv(time, event) ~ group, data = g3, distribution = "exact")
+logrank_test(Surv(time, event) ~ group, data = g4, distribution = "exact")
 #
-surv_test(Surv(time, event) ~ group | histology, data = glioma, distribution = approximate(B = 10000))
+logrank_test(Surv(time, event) ~ group | histology, data = glioma, distribution = approximate(B = 10000))
