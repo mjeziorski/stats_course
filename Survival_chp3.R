@@ -86,3 +86,20 @@ risk.table.height = 0.25, # Useful to change when you have multiple groups
 surv.median.line = "hv",  # add the median survival pointer.
 ggtheme = theme_bw()      # Change ggplot2 theme
 )
+#
+# Example with more than one variable Colon data from the survival package
+#
+data(colon)
+fit <- survfit(Surv(time,status)~rx, data=colon)
+ggsurvplot(fit, data = colon, size = 0.5, linetype = "strata", legend = c(0.2, 0.2), break.time.by = 500)
+# more complicated
+ggsurvplot(fit, data = colon, 
+           size = 0.5, 
+           linetype = "strata", 
+           legend = c(0.3, 0.2), 
+           break.time.by = 500,
+           pval = TRUE,
+           palette = "lancet",
+           risk.table = TRUE, 
+           risk.table.y.text.col = TRUE
+          )
