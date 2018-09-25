@@ -13,6 +13,11 @@ summary(hers_nodi_Fit)
 # and for obtaining the table 4.2 with multiple linear model
 hers_nodi_Fit2 <- lm(glucose ~ exercise + age + drinkany + BMI, data = hers_nodi)
 summary(hers_nodi_Fit2)
+# For the amount of exercise
+ggplot(data = hers_nodi, mapping = aes(x = factor(physact), y = glucose)) + geom_boxplot(na.rm = TRUE) + geom_jitter(height = 0.15, width = 0.15)
+#
+hers_nodi_Fit3 <- lm(glucose ~ factor(physact), data = hers_nodi)
+summary(hers_nodi_Fit3)
 #
 # Example of multiple linear regression 
 # clouds from HSAUR
