@@ -40,3 +40,11 @@ betaStar
 VbetaStar <- vcov(clouds_lm)
 # Where the square roots of the diagonal elements are the standart errors 
 sqrt(diag(VbetaStar))
+#
+# Examples from the STHDA
+library(car)
+data(Salaries)
+res <- model.matrix(~rank, data = Salaries)
+# to see the way R has encoded rank head(res[, -1])
+model_Salar <- lm(salary ~ yrs.service + rank + discipline + sex, data=Salaries)
+summary(model_Salar)
