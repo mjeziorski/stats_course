@@ -19,32 +19,68 @@ ggplot(data = hers_nodi, mapping = aes(x = factor(physact), y = glucose)) + geom
 hers_nodi_Fit3 <- lm(glucose ~ factor(physact), data = hers_nodi)
 summary(hers_nodi_Fit3)
 #
-# Example of multiple linear regression 
+# Example of multiple linear regression using the clouds data
 # clouds from HSAUR
 library(HSAUR2)
 data(clouds)
+sample_n(clouds, 5)
 # looking the datafor rainfall
 boxplot(rainfall~seeding, data=clouds)
 boxplot(rainfall~echomotion, data=clouds)
+# layout(matrix(1:2, nrow = 2))
+# bxpseeding <- boxplot(rainfall ~ seeding, data = clouds, ylab = "Rainfall", xlab = "Seeding")
+# bxpecho <- boxplot(rainfall ~ echomotion, data = clouds, ylab = "Rainfall", xlab = "Echo Motion")
 # y = Xb+e with X the design model matrix that consis of the q continuously measured
 # explanatory variables and a column of ones corresponding to the intercept term
+layout(matrix(1:4, nrow = 2))
+plot(rain ~ time, data = clouds)
+plot(rain ~ cloudc, data = clouds)
+plot(rain ~ sne, data = clouds, xlab="S-Ne criterion")
+plot(rain ~ prewet, data = clouds)
+#
 clouds_formula <- rainfall ~ seeding + seeding:(sne+cloudcover+prewetness+echomotion) + time
 Xstar <- model.matrix(clouds_formula, data = clouds)
 attr(Xstar, "contrasts")
 clouds_lm <- lm(clouds_formula, data = clouds)
 summary(clouds_lm)
+layout(matrix(1:1, nrow = 1))
 # to list the betas* with the:
 betaStar <- coef(clouds_lm)
 betaStar
+# to understand the relation of seeding and sne
+psymb <- as.numeric(clouds$seeding)
+plot(rain ~ sne, data = clouds, pch = psymb, xlab = "S-Ne criterion")
+abline(lm(rain ~ sne, data = clouds, subset = seeding == "no"))
+abline(lm(rain ~ sne, data = clouds, subset = seeding == "yes"), lty = 2)
+legend("topright", legend = c("No seeding", "Seeding"), pch = 1:2, lty = 1:2, bty = "n")
+#
 # and the Covariant matrix Cov(beta*) with:
 VbetaStar <- vcov(clouds_lm)
 # Where the square roots of the diagonal elements are the standart errors 
 sqrt(diag(VbetaStar))
-#
+# 
+# Regression with categorical variables. Dummy Coding Essentials in R
 # Examples from the STHDA
+library(tidyverse)
 library(car)
 data(Salaries)
-res <- model.matrix(~rank, data = Salaries)
+# Inspecting 5 lines of the Salaries database
+sample_n(Salaries, 5)
+# model of salary with sex
+model <- lm(salary ~ sex, data = Salaries)
+summary(model)$coef
+# contrasts() will show the dummy coding of the sex variable of the 
 # to see the way R has encoded rank head(res[, -1])
+contrasts(Salaries$sex)
+SalariesM <- Salaries %>%
+  mutate(sex = relevel(sex, ref = "Male"))
+# to change the reference dummy coding
+model <- lm(salary ~ sex, data = Salaries)
+summary(model)$coef
+#
+res <- model.matrix(~rank, data = Salaries)
+head(res[, -1])
+# for multiple variables with interaction
 model_Salar <- lm(salary ~ yrs.service + rank + discipline + sex, data=Salaries)
 summary(model_Salar)
+#
