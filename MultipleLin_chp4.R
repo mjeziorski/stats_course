@@ -49,9 +49,9 @@ betaStar <- coef(clouds_lm)
 betaStar
 # to understand the relation of seeding and sne
 psymb <- as.numeric(clouds$seeding)
-plot(rain ~ sne, data = clouds, pch = psymb, xlab = "S-Ne criterion")
-abline(lm(rain ~ sne, data = clouds, subset = seeding == "no"))
-abline(lm(rain ~ sne, data = clouds, subset = seeding == "yes"), lty = 2)
+plot(rainfall ~ sne, data = clouds, pch = psymb, xlab = "S-Ne criterion")
+abline(lm(rainfall ~ sne, data = clouds, subset = seeding == "no"))
+abline(lm(rainfall ~ sne, data = clouds, subset = seeding == "yes"), lty = 2)
 legend("topright", legend = c("No seeding", "Seeding"), pch = 1:2, lty = 1:2, bty = "n")
 #
 # and the Covariant matrix Cov(beta*) with:
