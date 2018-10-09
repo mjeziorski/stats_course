@@ -33,10 +33,10 @@ boxplot(rainfall~echomotion, data=clouds)
 # y = Xb+e with X the design model matrix that consis of the q continuously measured
 # explanatory variables and a column of ones corresponding to the intercept term
 layout(matrix(1:4, nrow = 2))
-plot(rain ~ time, data = clouds)
-plot(rain ~ cloudc, data = clouds)
-plot(rain ~ sne, data = clouds, xlab="S-Ne criterion")
-plot(rain ~ prewet, data = clouds)
+plot(rainfall ~ time, data = clouds)
+plot(rainfall ~ cloudcover, data = clouds)
+plot(rainfall ~ sne, data = clouds, xlab="S-Ne criterion")
+plot(rainfall ~ prewetness, data = clouds)
 #
 clouds_formula <- rainfall ~ seeding + seeding:(sne+cloudcover+prewetness+echomotion) + time
 Xstar <- model.matrix(clouds_formula, data = clouds)
