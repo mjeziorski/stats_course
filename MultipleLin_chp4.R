@@ -25,13 +25,12 @@ library(HSAUR2)
 data(clouds)
 sample_n(clouds, 5)
 # looking the datafor rainfall
-boxplot(rainfall~seeding, data=clouds)
-boxplot(rainfall~echomotion, data=clouds)
-# layout(matrix(1:2, nrow = 2))
-# bxpseeding <- boxplot(rainfall ~ seeding, data = clouds, ylab = "Rainfall", xlab = "Seeding")
-# bxpecho <- boxplot(rainfall ~ echomotion, data = clouds, ylab = "Rainfall", xlab = "Echo Motion")
-# y = Xb+e with X the design model matrix that consis of the q continuously measured
-# explanatory variables and a column of ones corresponding to the intercept term
+# boxplot(rainfall~seeding, data=clouds)
+# boxplot(rainfall~echomotion, data=clouds)
+layout(matrix(1:2, ncol = 2))
+bxpseeding <- boxplot(rainfall ~ seeding, data = clouds, ylab = "Rainfall", xlab = "Seeding")
+bxpecho <- boxplot(rainfall ~ echomotion, data = clouds, ylab = "Rainfall", xlab = "Echo Motion")
+# 
 layout(matrix(1:4, nrow = 2))
 plot(rainfall ~ time, data = clouds)
 plot(rainfall ~ cloudcover, data = clouds)
@@ -58,7 +57,15 @@ legend("topright", legend = c("No seeding", "Seeding"), pch = 1:2, lty = 1:2, bt
 VbetaStar <- vcov(clouds_lm)
 # Where the square roots of the diagonal elements are the standart errors 
 sqrt(diag(VbetaStar))
-# 
+clouds_resid <- residuals(clouds_lm)
+clouds_fitted <- fitted(clouds_lm)
+# residuals and the fitted values can be used to construct diagnostic plot
+plot(clouds_fitted, clouds_resid, xlab = "Fitted values", ylab = "Residuals", type = "n", ylim = max(abs(clouds_resid)) * c(-1, 1))
+abline(h = 0, lty = 2)
+textplot(clouds_fitted, clouds_resid, words = rownames(clouds), new = FALSE)
+qqnorm(clouds_resid, ylab = "Residuals")
+qqline(clouds_resid)
+
 # Regression with categorical variables. Dummy Coding Essentials in R
 # Examples from the STHDA
 library(tidyverse)
