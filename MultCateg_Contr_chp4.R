@@ -68,6 +68,7 @@ G$linfct
 summary(G, test=adjusted("single-step"))
 #
 
+# From https://rcompanion.org/rcompanion/h_01.html
 # 
 # Example from R companion: Contrasts in Linear Models
 Input = ("
