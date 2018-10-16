@@ -5,10 +5,11 @@
 #
 # Multilevel categorical predictors Chap 4 example HERS with physact
 # libraries
-library(tidyverse)
+#
 library(car)
 library(lsmeans)
 library(multcomp)
+library(tidyverse)
 #
 
 hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
