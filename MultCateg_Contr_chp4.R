@@ -17,7 +17,9 @@ hers_nodi <- filter(hers, diabetes == "no")
 ggplot(data = hers_nodi, mapping = aes(x = physact, y = glucose)) + geom_boxplot(na.rm = TRUE)
 # Multilever categorical multiple linear model for women without diebetes
 # To get table 4.4 Regression of physical activity on glucose
+# mutate(hers_nodi, physact = factor(physact))
 hers_nodi$physact <- factor(hers_nodi$physact)
+levels(hers_nodi$physact)
 glucose_fit_act <- lm(glucose ~ physact, data = hers_nodi)
 # betaStar <- coef(glucose_fit_act)
 # betaStar
@@ -30,7 +32,7 @@ Anova(glucose_fit_act, type="II")
 summary(glucose_fit_act)
 layout(matrix(1:4, nrow = 2))
 plot(glucose_fit_act)
-levels(hers_nodi$physact)
+
 glucose_lstsqr <- lsmeans(glucose_fit_act, "physact")
 # Contrasts
 Contrasts_glu = list(MAvsLA          = c( 0, -1, 1, -1,  1),
@@ -43,7 +45,10 @@ Contrasts_glu = list(MAvsLA          = c( 0, -1, 1, -1,  1),
                      SLAvsC          = c(-1,  0,  0,  1, 0),
                      SMAvsC          = c(-1,  0,  0,  0, 1))
 contrast(glucose_lstsqr, Contrasts_glu, adjust="sidak")
-# with multicomp
+# compare the results with least-squares adjusted with sidak, FWE.
+# With adjust="none", results will be the same as the aov method.
+
+# Same cotrasts with multicomp library
 Input = ("
 Contrast.Name     AAA   MLA  MMA  SLA  SMA
  MAvsLA             0   -1    1   -1    1
