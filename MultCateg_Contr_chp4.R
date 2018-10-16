@@ -7,19 +7,20 @@
 # libraries
 #
 library(car)
-library(lsmeans)
+#library(lsmeans)
+library(emmeans)
 library(multcomp)
 library(tidyverse)
 #
 
 hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
 hers_nodi <- filter(hers, diabetes == "no")
-ggplot(data = hers_nodi, mapping = aes(x = physact, y = glucose)) + geom_boxplot(na.rm = TRUE)
 # Multilever categorical multiple linear model for women without diebetes
 # To get table 4.4 Regression of physical activity on glucose
-# mutate(hers_nodi, physact = factor(physact))
-hers_nodi$physact <- factor(hers_nodi$physact)
+# hers_nodi$physact <- factor(hers_nodi$physact)
+hers_nodi <- mutate(hers_nodi, physact = factor(physact))
 levels(hers_nodi$physact)
+ggplot(data = hers_nodi, mapping = aes(x = physact, y = glucose)) + geom_boxplot(na.rm = TRUE)
 glucose_fit_act <- lm(glucose ~ physact, data = hers_nodi)
 # betaStar <- coef(glucose_fit_act)
 # betaStar
@@ -33,7 +34,7 @@ summary(glucose_fit_act)
 layout(matrix(1:4, nrow = 2))
 plot(glucose_fit_act)
 
-glucose_lstsqr <- lsmeans(glucose_fit_act, "physact")
+glucose_lstsqr <- emmeans(glucose_fit_act, "physact")
 # Contrasts
 Contrasts_glu = list(MAvsLA          = c( 0, -1, 1, -1,  1),
                      InteractMuchSo  = c( 0,  1, 1, -1, -1),
@@ -47,6 +48,7 @@ Contrasts_glu = list(MAvsLA          = c( 0, -1, 1, -1,  1),
 contrast(glucose_lstsqr, Contrasts_glu, adjust="sidak")
 # compare the results with least-squares adjusted with sidak, FWE.
 # With adjust="none", results will be the same as the aov method.
+contrast(glucose_lstsqr, Contrasts_glu, adjust="bonferroni")
 
 # Same cotrasts with multicomp library
 Input = ("
@@ -89,12 +91,13 @@ Treatment   Response
  'Control'  0.9
  'Control'  0.8
 ")
-
 Data = read.table(textConnection(Input),header=TRUE)
 Data$Treatment = factor(Data$Treatment, levels=unique(Data$Treatment))
 # Specifying the order of factor levels
 Data
-boxplot(Response ~ Treatment, data = Data, ylab="Response", xlab="Treatment")
+levels(Data$Treatment)
+ggplot(data = Data, mapping = aes(x = Treatment, y = Response), labs( x = "Treatment", y = "Treatment") + geom_boxplot(na.rm = TRUE)
+# boxplot(Response ~ Treatment, data = Data, ylab="Response", xlab="Treatment")
 
 ###  Define linear model
 model = lm(Response ~ Treatment, data = Data)
@@ -102,9 +105,8 @@ model = lm(Response ~ Treatment, data = Data)
 Anova(model, type="II")
 summary(model)
 # to construct the contrasts you better see the orther 
-levels(Data$Treatment)
-leastsquare = lsmeans(model, "Treatment")
-
+leastsq = emmeans(model, "Treatment")
+# Contrasts for factors
 Contrasts = list(D1vsD2          = c(1,  1, -1, -1,  0),
                  C1vsC2          = c(1, -1,  1, -1,  0),
                  InteractionDC   = c(1, -1, -1,  1,  0),
@@ -117,7 +119,7 @@ Contrasts = list(D1vsD2          = c(1,  1, -1, -1,  0),
                  T4vsC           = c(0,  0,  0,  1, -1))
 ### The column names match the order of levels of the treatment variable
 ### The coefficients of each row sum to 0
-contrast(leastsquare, Contrasts, adjust="sidak")
+contrast(leastsq, Contrasts, adjust="sidak")
 #
 # Example with multicomp
 Input = ("
