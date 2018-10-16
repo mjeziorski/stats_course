@@ -85,22 +85,3 @@ head(res[, -1])
 # for multiple variables with interaction
 model_Salar <- lm(salary ~ yrs.service + rank + discipline + sex, data=Salaries)
 summary(model_Salar)
-#
-# Multilevel categorical predictors Chap 4 example HERS with physact
-library(tidyverse)
-hers <- read_csv("DataRegressBook/Chap3/hersdata.csv")
-hers_nodi <- filter(hers, diabetes == "no")
-ggplot(data = hers_nodi, mapping = aes(x = physact, y = glucose)) + geom_boxplot(na.rm = TRUE)
-# Multilever categorical multiple linear model for women without diebetes
-# To get table 4.4 Regression of physical activity on glucose
-glucose_fit_act <- lm(glucose ~ physact, data = hers_nodi)
-summary(glucose_fit_act)
-betaStar <- coef(glucose_fit_act)
-betaStar
-# Xstar <- model.matrix(glucose ~ physact, data = hers_nodi)
-# and the Covariant matrix
-# Cov_glucose_betaStar <- vcov(glucose_fit_act)
-# Where the square roots of the diagonal elements are the standart errors 
-# sqrt(diag(Cov_glucose_betaStar))
-layout(matrix(1:4, nrow = 2))
-plot(glucose_fit_act)
