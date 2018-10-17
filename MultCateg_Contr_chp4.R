@@ -96,7 +96,7 @@ Data$Treatment = factor(Data$Treatment, levels=unique(Data$Treatment))
 # Specifying the order of factor levels
 Data
 levels(Data$Treatment)
-ggplot(data = Data, mapping = aes(x = Treatment, y = Response), labs( x = "Treatment", y = "Treatment")) + geom_boxplot(na.rm = TRUE)
+ggplot(data = Data, mapping = aes(x = Treatment, y = Response), labs( x = "Treatment", y = "Response")) + geom_boxplot(na.rm = TRUE)
 # boxplot(Response ~ Treatment, data = Data, ylab="Response", xlab="Treatment")
 
 ###  Define linear model
