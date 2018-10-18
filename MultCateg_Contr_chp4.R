@@ -140,3 +140,55 @@ Matriz
 G = glht(model, linfct = mcp(Treatment = Matriz))
 G$linfct
 summary(G, test=adjusted("single-step"))
+# 
+# More examples.
+# Exmple global F-test within a group of treatments, post-hoc comparisons could still be made 
+# within the independent variable.
+Input = ("
+Treatment          Response
+ Merlot             5
+ Merlot             6
+ Merlot             7
+ Cabernet           8
+ Cabernet           9
+ Cabernet          10
+ Syrah             11
+ Syrah             12
+ Syrah             13
+ Chardonnay         1
+ Chardonnay         2
+ Chardonnay         3
+ Riesling           1
+ Riesling           2 
+ Riesling           2
+ Gewürtztraminer    1 
+ Gewürtztraminer    2
+ Gewürtztraminer    4
+")
+
+Data = read.table(textConnection(Input),header=TRUE)
+# factors: Specify the order of factor levels
+Data$Treatment = factor(Data$Treatment, levels=unique(Data$Treatment))
+levels(Data$Treatment)
+#
+ggplot(data = Data, mapping = aes(x = Treatment, y = Response), labs( x = "Treatment", y = "Response")) + geom_boxplot(na.rm = TRUE)
+Wine_model = lm(Response ~ Treatment, data = Data)
+summary(Wine_model)
+# Least square means memeans library
+leastsqr = emmeans(Wine_model, "Treatment")
+Contrasts = list(Red_line1   = c(1, -1,  0,  0,  0,  0),
+                 Red_line2   = c(0,  1, -1,  0,  0,  0))
+# Is there an effect within red wine ?
+Red_Test = contrast(leastsqr, Contrasts)
+test(Red_Test, joint=TRUE)
+# Is there an effect within white wine ?
+Contrasts = list(White_line1   = c(0,  0,  0,  1, -1,  0),
+                 White_line2   = c(0,  0,  0,  0,  1, -1))
+White_Test = contrast(leastsqr, Contrasts)
+test(White_Test, joint=TRUE)
+# Is there a difference between red and white wines?  And, mean separation for red wine
+Contrasts = list(Red_vs_white    = c( 1,  1,  1, -1, -1, -1),
+                 Merlot_vs_Cab   = c( 1, -1,  0,  0,  0,  0),
+                 Cab_vs_Syrah    = c( 0,  1, -1,  0,  0,  0),
+                 Syrah_vs_Merlot = c(-1,  0,  1,  0,  0,  0))
+contrast(leastsqr, Contrasts, adjust="sidak")
