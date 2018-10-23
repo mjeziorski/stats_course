@@ -37,14 +37,13 @@ plot(glucose_fit_act)
 glucose_lstsqr <- emmeans(glucose_fit_act, "physact")
 # Contrasts
 Contrasts_glu = list(MAvsLA          = c(-1, -1, 0,  1,  1),
-                     InteractMuchSo  = c( 1,  1, 0, -1, -1),
                      MAvsLAforMuch   = c(-1,  0, 0,  0,  1),
                      MAvsLAforSome   = c( 0, -1, 0,  1,  0),
-                     phyActvsControl = c( 1,  1,-4,  1,  1),
                      MLAvsC          = c(-1,  0, 1,  0,  0),
                      SLAvsC          = c( 0, -1, 1,  0,  0),
                      SMAvsC          = c( 0,  0,-1,  1,  0),
-                     MMAvsC          = c( 0,  0,-1,  0,  1))
+                     MMAvsC          = c( 0,  0,-1,  0,  1),
+                     LinTrend_phys   = c(-2, -1, 0,  1,  2))
 contrast(glucose_lstsqr, Contrasts_glu, adjust="sidak")
 # compare the results with least-squares adjusted with sidak, FWE.
 # With adjust="none", results will be the same as the aov method.
@@ -52,16 +51,15 @@ contrast(glucose_lstsqr, Contrasts_glu, adjust="bonferroni")
 
 # Same cotrasts with multicomp library
 Input = ("
-Contrast.Name     MLA  SLA  AAA  SMA  MMA
- MAvsLA           -1   -1    0    1    1
- InteractMuchSo    1    1    0   -1   -1
- MAvsLAforMuch    -1    0    0    0    1
- MAvsLAforSome     0   -1    0    1    0
- phyActvsControl   1    1   -4    1    1
- MLAvsC           -1    0    1    0    0
- SLAvsC            0   -1    1    0    0
- SMAvsC            0    0   -1    1    0
- MMAvsC            0    0   -1    0    1
+Contrast.Name     MLA SLA AAA SMA MMA
+ MAvsLA           -1  -1   0   1   1
+ MAvsLAforMuch    -1   0   0   0   1
+ MAvsLAforSome     0  -1   0   1   0
+ MLAvsC           -1   0   1   0   0
+ SLAvsC            0  -1   1   0   0
+ SMAvsC            0   0  -1   1   0
+ MMAvsC            0   0  -1   0   1
+ LinearTrending   -2  -1   0   1   2
 ")
 Cont_glucose_Matriz = as.matrix(read.table(textConnection(Input), header=TRUE, row.names=1))
 Cont_glucose_Matriz
