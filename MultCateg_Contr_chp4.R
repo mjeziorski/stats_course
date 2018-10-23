@@ -7,7 +7,6 @@
 # libraries
 #
 library(car)
-#library(lsmeans)
 library(emmeans)
 library(multcomp)
 library(tidyverse)
@@ -18,7 +17,8 @@ hers_nodi <- filter(hers, diabetes == "no")
 # Multilever categorical multiple linear model for women without diebetes
 # To get table 4.4 Regression of physical activity on glucose
 # hers_nodi$physact <- factor(hers_nodi$physact)
-hers_nodi <- mutate(hers_nodi, physact = factor(physact))
+# hers_nodi <- mutate(hers_nodi, physact = factor(physact))
+hers_nodi <- mutate(hers_nodi, physact = factor(physact, levels=c("much less active","somewhat less active","about as active","somewhat more active","much more active")))
 levels(hers_nodi$physact)
 ggplot(data = hers_nodi, mapping = aes(x = physact, y = glucose)) + geom_boxplot(na.rm = TRUE)
 glucose_fit_act <- lm(glucose ~ physact, data = hers_nodi)
@@ -36,15 +36,15 @@ plot(glucose_fit_act)
 
 glucose_lstsqr <- emmeans(glucose_fit_act, "physact")
 # Contrasts
-Contrasts_glu = list(MAvsLA          = c( 0, -1, 1, -1,  1),
-                     InteractMuchSo  = c( 0,  1, 1, -1, -1),
-                     MAvsLAforMuch   = c( 0, -1, 1,  0,  0),
-                     MAvsLAforSome   = c( 0,  0,  0, -1, 1),
-                     phyActvsControl = c(-4,  1,  1,  1, 1),
-                     MLAvsC          = c(-1,  1,  0,  0, 0),
-                     MMAvsC          = c(-1,  0,  1,  0, 0),
-                     SLAvsC          = c(-1,  0,  0,  1, 0),
-                     SMAvsC          = c(-1,  0,  0,  0, 1))
+Contrasts_glu = list(MAvsLA          = c(-1, -1, 0,  1,  1),
+                     InteractMuchSo  = c( 1,  1, 0, -1, -1),
+                     MAvsLAforMuch   = c(-1,  0, 0,  0,  1),
+                     MAvsLAforSome   = c( 0, -1, 0,  1,  0),
+                     phyActvsControl = c( 1,  1,-4,  1,  1),
+                     MLAvsC          = c(-1,  0, 1,  0,  0),
+                     SLAvsC          = c( 0, -1, 1,  0,  0),
+                     SMAvsC          = c( 0,  0,-1,  1,  0),
+                     MMAvsC          = c( 0,  0,-1,  0,  1))
 contrast(glucose_lstsqr, Contrasts_glu, adjust="sidak")
 # compare the results with least-squares adjusted with sidak, FWE.
 # With adjust="none", results will be the same as the aov method.
@@ -52,23 +52,22 @@ contrast(glucose_lstsqr, Contrasts_glu, adjust="bonferroni")
 
 # Same cotrasts with multicomp library
 Input = ("
-Contrast.Name     AAA   MLA  MMA  SLA  SMA
- MAvsLA             0   -1    1   -1    1
- InteractMuchSo     0    1    1   -1   -1
- MAvsLAforMuch      0   -1    1    0    0
- MAvsLAforSome      0    0    0   -1    1
- phyActvsControl   -4    1    1    1    1
- MLAvsC            -1    1    0    0    0
- MMAvsC            -1    0    1    0    0
- SLAvsC            -1    0    0    1    0
- SMAvsC            -1    0    0    0    1
+Contrast.Name     MLA  SLA  AAA  SMA  MMA
+ MAvsLA           -1   -1    0    1    1
+ InteractMuchSo    1    1    0   -1   -1
+ MAvsLAforMuch    -1    0    0    0    1
+ MAvsLAforSome     0   -1    0    1    0
+ phyActvsControl   1    1   -4    1    1
+ MLAvsC           -1    0    1    0    0
+ SLAvsC            0   -1    1    0    0
+ SMAvsC            0    0   -1    1    0
+ MMAvsC            0    0   -1    0    1
 ")
 Cont_glucose_Matriz = as.matrix(read.table(textConnection(Input), header=TRUE, row.names=1))
 Cont_glucose_Matriz
 G = glht(glucose_fit_act, linfct = mcp(physact = Cont_glucose_Matriz))
 G$linfct
 summary(G, test=adjusted("single-step"))
-#
 
 # From https://rcompanion.org/rcompanion/h_01.html
 # 
