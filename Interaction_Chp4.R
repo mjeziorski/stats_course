@@ -34,3 +34,12 @@ summary(coeftest)
 hers <- mutate(hers, physact = factor(physact, levels=c("much less active","somewhat less active","about as active","somewhat more active","much more active")))
 LDLphys_model <- lm(LDL1 ~ HT * physact, data = hers)
 summary(LDLphys_model)
+
+#
+# Interaction of LDL and BMI
+hers <- mutate(hers, nonwhite = factor(nonwhite))
+hers <- mutate(hers, smoking = factor(smoking))
+hers <- mutate(hers, drinkany = factor(drinkany))
+hers <- mutate(hers, BMIc = BMI - mean(BMI,na.rm=TRUE))
+LDL_model <- lm(LDL ~ stains*BMIc + age + nonwhite + smoking + drinkany, data = hers)
+summary(LDL_model)
