@@ -28,15 +28,29 @@ coefeq %*% LDL_model$coefficients
 # coeftest <- glht(model= LDL_model, linfct= coefeq, rhs= 0, alternative= "greater")
 coeftest <- glht(model= LDL_model, linfct= coefeq, rhs= 0)
 summary(coeftest)
-# Example of LDL at the first year and physact
-# This is the table 4.16 of the book
-# The effects of the physica activity on the LDL model
+
+# Example of LDL after one year of HT and physact
+# This is the table 4.16 of the book, effect of the hormone therapy
+# combined with effects of physical activity at the one year visit
 # now to estimate the linear combination of the coefficients
 hers <- mutate(hers, physact = factor(physact, levels=c("much less active","somewhat less active","about as active","somewhat more active","much more active")))
 LDLphys_model <- lm(LDL1 ~ HT * physact, data = hers)
 summary(LDLphys_model)
 # The coefficients test for interaction
 # can be done with glht()
+coef_LDLphys <- matrix(data=0, nrow = 1, ncol = length(LDLphys_model$coefficients))
+colnames(coef_LDLphys) <- names(LDLphys_model$coefficients)
+# E[LDL|x] = b0 + b1 HT + b2 physact + b3 HT:physact
+# we will look at slope = b3 BMIc; coeff = 0, 0, 0, 0, 0, 1, 1, 1, 1
+# to test of significance
+coef_LDLphys[1, "HThormone therapy:physactsomewhat less active"] <- 1
+coef_LDLphys[1, "HThormone therapy:physactabout as active"] <- 1
+coef_LDLphys[1, "HThormone therapy:physactsomewhat more active"] <- 1
+coef_LDLphys[1, "HThormone therapy:physactmuch more active"] <- 1
+coef_LDLphys %*% LDLphys_model$coefficients
+coef_LDLphys
+coef_LDLphystest <- glht(model= LDLphys_model, linfct= coef_LDLphys, rhs= 0)
+summary(coef_LDLphystest)
 
 # Example of BMI and statins, with interaction
 # Model of LDL and BMI*statins and other variables
@@ -54,17 +68,11 @@ coef_LDLbmi <- matrix(data=0, nrow = 1, ncol = length(LDLbmi_model$coefficients)
 colnames(coef_LDLbmi) <- names(LDLbmi_model$coefficients)
 # E[LDL|x] = b0 + b1 statins + b2 BMIc + b3 statins:BMIc + b4 age
 #           + b5 nonwhite + b6 smoking + b7 + drinkany
-# we will look at slope = b1 + b3 BMIc; coeff = 0, 1, 0, 1, 0, 0, 0, 0
-coef_LDLbmi
-coef_LDLbmi[1, "statinsyes"] <- 1
-coef_LDLbmi[1, "statinsyes:BMIc"] <- 1
-coef_LDLbmi %*% LDLbmi_model$coefficients
-coef_LDLbmitest <- glht(model= LDLbmi_model, linfct= coef_LDLbmi, rhs= 0)
-summary(coef_LDLbmitest)
 # we will look at slope = b2 + b3 BMIc; coeff = 0, 0, 1, 1, 0, 0, 0, 0
 coef_LDLbmi[1, "statinsyes"] <- 0
 coef_LDLbmi[1, "BMIc"] <- 1
 coef_LDLbmi[1, "statinsyes:BMIc"] <- 1
 coef_LDLbmi %*% LDLbmi_model$coefficients
+coef_LDLbmi
 coef_LDLbmitest <- glht(model= LDLbmi_model, linfct= coef_LDLbmi, rhs= 0)
 summary(coef_LDLbmitest)
