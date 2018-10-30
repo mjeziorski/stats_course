@@ -2,6 +2,7 @@
 # libraries
 #
 library(car)
+library(MASS)
 library(multcomp)
 library(tidyverse)
 #
@@ -76,3 +77,10 @@ coef_LDLbmi %*% LDLbmi_model$coefficients
 coef_LDLbmi
 coef_LDLbmitest <- glht(model= LDLbmi_model, linfct= coef_LDLbmi, rhs= 0)
 summary(coef_LDLbmitest)
+# Comp of regular linear model and robust and some standard error handling
+#
+glucose_model <- lm(glucose ~ diabetes + BMI + age + drinkany, data= hers)
+# MASS rlm()
+glucose_rmodel <- rlm(glucose ~ diabetes + BMI + age + drinkany, data= hers)
+#
+glucose_rmodel_bi <- rlm(glucose ~ diabetes + BMI + age + drinkany, psi= psi.bisquare, data= hers)
