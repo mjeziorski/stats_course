@@ -37,3 +37,24 @@ symbols(plasma$fibrinogen, plasma$globulin, circles = prob, add = TRUE)
 data("womensrole", package = "HSAUR2")
 fmod <- cbind(agree, disagree) ~ gender + education
 womensrole_glm01 <- glm(fmod, data = womensrole, family = binomial())
+summary(womensrole_glm01)
+role.fitted01 <- predict(womensrole_glm01, type = "response")
+# definition of a plot of a fitted object
+myplot <- function(role.fitted) {
+  f <- womensrole$gender == "Female"
+  plot(womensrole$education, role.fitted, type = "n", ylab= "Probability of agreeing", xlab= "Education", ylim = c(0,1))
+  lines(womensrole$education[!f], role.fitted[!f], lty = 1)
+  lines(womensrole$education[f], role.fitted[f], lty = 2)
+  lgtxt <- c("Fitted (Males)", "Fitted (Females)")
+  legend("topright", lgtxt, lty = 1:2, bty = "n")
+  y <- womensrole$agree / (womensrole$agree + womensrole$disagree)
+  text(womensrole$education, y, ifelse(f, "\\VE", "\\MA"), family = "HersheySerif", cex = 1.25)
+}
+#
+myplot(role.fitted01)
+# Now with interaction terms
+fm02 <- cbind(agree, disagree) ~ gender * education
+womensrole_glm02 <- glm(fm02, data = womensrole, family = binomial())
+summary(womensrole_glm02)
+role.fitted02 <- predict(womensrole_glm02, type = "response")
+myplot(role.fitted02)
