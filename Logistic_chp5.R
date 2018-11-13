@@ -4,7 +4,8 @@
 # the level of ESR is not important as long as it is < 20mm/hr (healthy)
 # to asses ESR as useful diagnostic tool.
 # ESR > 20mm/hr for proteins fibrinogen and gamma globulin, using glm
-library("HSAUR2")
+library(tidyverse)
+library(HSAUR2)
 data("plasma", package = "HSAUR2")
 layout(matrix(1:2, ncol = 2))
 cdplot(ESR ~ fibrinogen, data = plasma)
