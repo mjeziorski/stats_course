@@ -27,3 +27,13 @@ summary(plasma_glm02)
 # to test for significance R take the lgm with a chisq
 # the 1.87 -> globulin has no influence in the ESR
 anova(plasma_glm01, plasma_glm02, test = "Chisq")
+# Estimates conditional probability of a ESR > 20 for all observations
+prob <- predict(plasma_glm02, type = "response")
+layout(matrix(1:1, ncol = 1))
+plot(globulin~ fibrinogen, data = plasma, xlim = c(2, 6), ylim = c(25, 55), pch = ".")
+symbols(plasma$fibrinogen, plasma$globulin, circles = prob, add = TRUE)
+# 
+#
+data("womensrole", package = "HSAUR2")
+fmod <- cbind(agree, disagree) ~ gender + education
+womensrole_glm01 <- glm(fmod, data = womensrole, family = binomial())
