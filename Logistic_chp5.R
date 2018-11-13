@@ -58,3 +58,9 @@ womensrole_glm02 <- glm(fm02, data = womensrole, family = binomial())
 summary(womensrole_glm02)
 role.fitted02 <- predict(womensrole_glm02, type = "response")
 myplot(role.fitted02)
+plot(womensrole_glm02)
+# To estimate de fit, we will use deviace residual
+# 
+res <- residuals(womensrole_glm02, type = "deviance")
+plot(predict(womensrole_glm02), res, xlab= "Fitted values", ylab= "Residuals", ylim = max(abs(res)) * c(-1,1))
+abline(h = 0, lty = 2)
