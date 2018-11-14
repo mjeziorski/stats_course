@@ -66,6 +66,15 @@ plot(predict(womensrole_glm02), res, xlab= "Fitted values", ylab= "Residuals", y
 abline(h = 0, lty = 2)
 #
 # Examples chp 5
+# from the data WCGS, the modle for the Cardiac H Diseace CHD table 5.2
 wcgs <- read_csv(file="DataRegressBook/Chap2/wcgs.csv")
+wcgs <- mutate(wcgs, chd69 = factor(chd69))
 CHD_glm01 <- glm(chd69 ~ age, data = wcgs, family = binomial())
 summary(CHD_glm01)
+confint(CHD_glm01, parm = "age")
+exp(coef(CHD_glm01)["age"])
+# For the model of CHD risc for the presence or arcus table 5.4
+CHDarc_glm01 <- glm(chd69 ~ arcus, data = wcgs, family = binomial())
+summary(CHDarc_glm01)
+exp(coef(CHDarc_glm01)["arcus"])
+exp(confint(CHDarc_glm01, parm = "arcus"))
