@@ -19,6 +19,7 @@ summary(plasma_glm01)
 confint(plasma_glm01, parm = "fibrinogen")
 exp(coef(plasma_glm01)["fibrinogen"])
 exp(confint(plasma_glm01, parm = "fibrinogen"))
+anova(plasma_glm01, test = "Chisq")
 # full model with two variables
 plasma_glm02 <- glm(ESR ~ fibrinogen + globulin, data = plasma, family = binomial())
 summary(plasma_glm02)
@@ -32,7 +33,6 @@ prob <- predict(plasma_glm02, type = "response")
 layout(matrix(1:1, ncol = 1))
 plot(globulin~ fibrinogen, data = plasma, xlim = c(2, 6), ylim = c(25, 55), pch = ".")
 symbols(plasma$fibrinogen, plasma$globulin, circles = prob, add = TRUE)
-# 
 #
 data("womensrole", package = "HSAUR2")
 fmod <- cbind(agree, disagree) ~ gender + education
@@ -73,6 +73,7 @@ CHD_glm01 <- glm(chd69 ~ age, data = wcgs, family = binomial())
 summary(CHD_glm01)
 confint(CHD_glm01, parm = "age")
 exp(coef(CHD_glm01)["age"])
+anova(CHD_glm01, test = "Chisq")
 # For the model of CHD risc for the presence or arcus table 5.4
 CHDarc_glm01 <- glm(chd69 ~ arcus, data = wcgs, family = binomial())
 summary(CHDarc_glm01)
