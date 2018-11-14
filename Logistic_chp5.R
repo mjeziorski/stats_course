@@ -64,3 +64,8 @@ plot(womensrole_glm02)
 res <- residuals(womensrole_glm02, type = "deviance")
 plot(predict(womensrole_glm02), res, xlab= "Fitted values", ylab= "Residuals", ylim = max(abs(res)) * c(-1,1))
 abline(h = 0, lty = 2)
+#
+# Examples chp 5
+wcgs <- read_csv(file="DataRegressBook/Chap2/wcgs.csv")
+CHD_glm01 <- glm(chd69 ~ age, data = wcgs, family = binomial())
+summary(CHD_glm01)
