@@ -68,6 +68,9 @@ abline(h = 0, lty = 2)
 # Examples chp 5
 # from the data WCGS, the modle for the Cardiac H Diseace CHD table 5.2
 wcgs <- read_csv(file="DataRegressBook/Chap2/wcgs.csv")
+wcgs %>%
+    select(chd69, age) %>%
+    summary()
 wcgs <- mutate(wcgs, chd69 = factor(chd69))
 CHD_glm01 <- glm(chd69 ~ age, data = wcgs, family = binomial())
 summary(CHD_glm01)
@@ -75,7 +78,24 @@ confint(CHD_glm01, parm = "age")
 exp(coef(CHD_glm01)["age"])
 anova(CHD_glm01, test = "Chisq")
 # For the model of CHD risc for the presence or arcus table 5.4
+wcgs %>%
+    select(arcus) %>%
+    summary()
+wcgs %>% mutate(wcgs, arcus = factor(arcus))
 CHDarc_glm01 <- glm(chd69 ~ arcus, data = wcgs, family = binomial())
 summary(CHDarc_glm01)
 exp(coef(CHDarc_glm01)["arcus"])
 exp(confint(CHDarc_glm01, parm = "arcus"))
+layout(matrix(1:4, ncol = 2))
+plot(CHDarc_glm01)
+layout(matrix(1:1, ncol = 1))
+
+wcgs %>%
+  select(chd69, age, arcus) %>%
+  summary()
+CHDarc_glm02 <- glm(chd69 ~ age * arcus, data = wcgs, family = binomial())
+summary(CHDarc_glm02)
+exp(coef(CHDarc_glm02))
+layout(matrix(1:4, ncol = 2))
+plot(CHDarc_glm02)
+layout(matrix(1:1, ncol = 1))
