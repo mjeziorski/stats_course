@@ -6,6 +6,9 @@
 # ESR > 20mm/hr for proteins fibrinogen and gamma globulin, using glm
 library(tidyverse)
 library(HSAUR2)
+library(emmeans)
+library(multcomp)
+#
 data("plasma", package = "HSAUR2")
 layout(matrix(1:2, ncol = 2))
 cdplot(ESR ~ fibrinogen, data = plasma)
@@ -86,16 +89,20 @@ CHDarc_glm01 <- glm(chd69 ~ arcus, data = wcgs, family = binomial())
 summary(CHDarc_glm01)
 exp(coef(CHDarc_glm01)["arcus"])
 exp(confint(CHDarc_glm01, parm = "arcus"))
-layout(matrix(1:4, ncol = 2))
-plot(CHDarc_glm01)
-layout(matrix(1:1, ncol = 1))
-
-wcgs %>%
-  select(chd69, age, arcus) %>%
-  summary()
-CHDarc_glm02 <- glm(chd69 ~ age * arcus, data = wcgs, family = binomial())
-summary(CHDarc_glm02)
-exp(coef(CHDarc_glm02))
-layout(matrix(1:4, ncol = 2))
-plot(CHDarc_glm02)
-layout(matrix(1:1, ncol = 1))
+# For the example in table 5.5 Logistic model of CHD and age as categorical factor
+CHDagec_glm <- glm(chd69 ~ agec , data = wcgs, family = binomial())
+summary(CHDagec_glm)
+exp(coef(CHDagec_glm))
+#
+CHDagec_lstsqr <- emmeans(CHDagec_glm, "agec")
+# Contrasts
+Contrasts_CHDagec = list(oneVSbase   = c(-1, 1, 0, 0, 0),
+                         twoVSbase   = c(-1, 0, 1, 0, 0),
+                         threeVSbase = c(-1, 0, 0, 1, 0),
+                         fourVSbase  = c(-1, 0, 0, 0, 1))
+# Following estimate the coeficients contrasts in the log odds ratio
+contrast(CHDagec_lstsqr, Contrasts_CHDagec, adjust="sidak")
+contrast(CHDagec_lstsqr, Contrasts_CHDagec, adjust="bonferroni")
+# For multiple logistic model for CHD risk
+CHDmult_glm <- glm(chd69 ~ age + chol + bmi + sbp + smoke , data = wcgs, family = binomial())
+summary(CHDmult_glm)
