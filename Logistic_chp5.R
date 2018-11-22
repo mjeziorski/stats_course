@@ -86,9 +86,28 @@ wcgs %>%
     summary()
 wcgs %>% mutate(wcgs, arcus = factor(arcus))
 CHDarc_glm01 <- glm(chd69 ~ arcus, data = wcgs, family = binomial())
+# CHDarc_glm01 <- glm(chd69 ~ arcus, data = filter(wcgs, !is.na(arcus)), family = binomial())
 summary(CHDarc_glm01)
 exp(coef(CHDarc_glm01)["arcus"])
 exp(confint(CHDarc_glm01, parm = "arcus"))
+#
+wcgs <- wcgs %>%
+    mutate(arcus_f = fct_recode(factor(arcus),
+                                "Arcus senilis" = "1",
+                                "No arcus senilis" = "0"),
+           arcus_f = fct_relevel(arcus_f, "Arcus senilis"))
+wcgs %>%
+    filter(complete.cases(arcus_f, sbp, weight)) %>%
+    ggplot(aes(x = weight, y = sbp, group = arcus_f)) +
+    geom_point(size=2, shape = 1) + 
+    stat_smooth(method=lm, color="red") +
+    stat_smooth(method=loess, se=FALSE, color="blue") +
+    labs(title = "SBP vs. Weight by Arcus Senilis status",
+         caption = "WCGStudy subjects with arcus senilis status") + 
+    facet_wrap(~ arcus_f) +
+    theme_bw()
+CHDarc_glm02 <- glm(chd69 ~ arcus_f, data = wcgs, family = binomial())
+summary(CHDarc_glm01)
 # For the example in table 5.5 Logistic model of CHD and age as categorical factor
 CHDagec_glm <- glm(chd69 ~ agec , data = wcgs, family = binomial())
 summary(CHDagec_glm)
@@ -103,6 +122,12 @@ Contrasts_CHDagec = list(oneVSbase   = c(-1, 1, 0, 0, 0),
 # Following estimate the coeficients contrasts in the log odds ratio
 contrast(CHDagec_lstsqr, Contrasts_CHDagec, adjust="sidak")
 contrast(CHDagec_lstsqr, Contrasts_CHDagec, adjust="bonferroni")
+#
+
 # For multiple logistic model for CHD risk
 CHDmult_glm <- glm(chd69 ~ age + chol + bmi + sbp + smoke , data = wcgs, family = binomial())
 summary(CHDmult_glm)
+# For chp 5 the example of interactions for continuous and categorical variables.
+# example of table 5.16 with age and arcus, with age as continuous
+CHDaa_glm <- glm(chd69 ~ arcus * age , data = wcgs, family = binomial())
+summary(CHDaa_glm)
